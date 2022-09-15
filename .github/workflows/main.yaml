@@ -75,5 +75,6 @@ jobs:
 
       - name: Start application
         run: |
-          ls -l dist/artifact
+          mv dist/artifact/* dist
+          rm -rf dist/artifact
           npm run start
