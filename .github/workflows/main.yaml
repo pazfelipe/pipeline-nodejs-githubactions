@@ -16,7 +16,6 @@ env:
   CLUSTER_ENV: production
 
 jobs:
-
   generate_labels:
     name: Gerando labels
     runs-on: ubuntu-latest
@@ -33,14 +32,22 @@ jobs:
       - name: Gerando url do container
         id: gcr_container
         run: echo "::set-output name=url::gcr.io/${{ env.PROJECT_ID }}/${{ steps.image_name.outputs.image }}"
-      
+
       - name: Setando ambiente
         id: current_environment
         run: echo "::set-output name=env::gcr.io/${{ env.PROJECT_ID }}/${{ steps.image_name.outputs.image }}"
 
+    outputs:
+      timestamp: ${{ steps.timestamp.outputs.date }}
+      image: ${{ steps.image_name.outputs.image }}
+      gcr_container: ${{ steps.gcr_container.outputs.url }}
+      current_environment: ${{ steps.current_environment.outputs.env }}
+
   test:
     runs-on: ubuntu-latest
     name: Initial configuration and testing
+
+    needs: generate_labels
 
     strategy:
       matrix:
@@ -164,7 +171,7 @@ jobs:
       - name: Notify Slack
         run: |
           echo "Deployed to Dev"
-          echo "Teste aqui ${{ jobs.generate_labels.steps.timestamp.outputs.date }}"
+          echo "Teste aqui ${{ jobs.generate_labels.outputs.timestamp }}"
 
   delete_artifacts:
     runs-on: ubuntu-latest
