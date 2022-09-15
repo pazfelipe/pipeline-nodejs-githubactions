@@ -2,7 +2,10 @@ name: Testing Actions Environment
 
 on:
   workflow_dispatch:
-
+  push:
+    branches:
+      - main
+      - development
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -56,6 +59,7 @@ jobs:
           retention-days: 1
 
   deploy-to-dev:
+    if: github.ref == 'refs/heads/development'
     runs-on: ubuntu-latest
     name: Deploy application to Dev
     environment: dev
@@ -77,6 +81,7 @@ jobs:
           npm run start
   
   deploy-to-prod:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     name: Deploy application to Prod
     environment: prod
