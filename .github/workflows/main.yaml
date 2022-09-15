@@ -58,7 +58,7 @@ jobs:
           path: ./dist
           retention-days: 1
 
-  deploy-to-dev:
+  deploy_to_dev:
     if: github.ref == 'refs/heads/development'
     runs-on: ubuntu-latest
     name: Deploy application to Dev
@@ -80,7 +80,7 @@ jobs:
           rm -rf dist/artifact
           npm run start
   
-  deploy-to-prod:
+  deploy_to_prod:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     name: Deploy application to Prod
@@ -101,3 +101,14 @@ jobs:
           mv dist/artifact/* dist
           rm -rf dist/artifact
           npm run start
+
+  notify-slack:
+    if: contains(needs.deploy_to_dev.result, 'success') || contains(needs.deploy_to_prod.result, 'success')
+    runs-on: ubuntu-latest
+    name: Notify Slack
+    needs: [deploy_to_dev, deploy_to_prod]
+
+    steps:
+      - name: Notify Slack
+        run: | 
+          echo "Deployed to Dev"
