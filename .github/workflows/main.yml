@@ -10,6 +10,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    name: Initial configuration and testing
 
     strategy:
       matrix:
@@ -28,7 +29,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          ls -l
           yarn
 
       - name: Run tests
@@ -36,6 +36,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    name: Build
 
     needs: test
 
@@ -47,6 +48,30 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
 
       - name: Build
-        run: npm run build
+        run: |
+          ls
+          npm run build
+
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to Firebase
+
+    needs: test
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+
+      - name: Build
+        run: |
+          ls
+          npm run build
