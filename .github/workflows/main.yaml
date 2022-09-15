@@ -23,7 +23,7 @@ jobs:
       - uses: actions/upload-artifact@master
         with:
           name: my-artifact
-          path: .
+          path: ./dist
 
       # Runs a single command using the runners shell
       - name: Configure NodeJs
@@ -48,15 +48,15 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      - uses: actions/upload-artifact@master
-        with:
-          name: my-artifact
-          path: .
 
       - name: Build
         run: |
           npm run build
-          ls
+          ls -l
+      
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ./dist
 
   deploy:
     runs-on: ubuntu-latest
@@ -68,12 +68,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      - uses: actions/upload-artifact@master
+      - uses: actions/download-artifact@v3
         with:
-          name: my-artifact
-          path: .
+          path: ./dist
 
       - name: Start application
         run: |
+          ls -l
           npm run start
-          ls
