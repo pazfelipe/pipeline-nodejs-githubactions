@@ -75,6 +75,5 @@ jobs:
 
       - name: Start application
         run: |
-          ls -l
-          ls -l dist
+          ls -l dist/artifact
           npm run start
