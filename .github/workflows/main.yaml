@@ -55,12 +55,12 @@ jobs:
 
       - name: Build
         run: |
-          ls
           npm run build
+          ls
 
   deploy:
     runs-on: ubuntu-latest
-    name: Deploy to Firebase
+    name: Deploy application
 
     needs: build
 
@@ -75,5 +75,5 @@ jobs:
 
       - name: Start application
         run: |
-          ls
           npm run start
+          ls
