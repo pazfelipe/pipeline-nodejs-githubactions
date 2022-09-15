@@ -84,7 +84,7 @@ jobs:
     if: github.ref == 'refs/heads/staging'
     runs-on: ubuntu-latest
     name: Deploy application to Staging
-    environment: prod
+    environment: staging
 
     needs: build
 
