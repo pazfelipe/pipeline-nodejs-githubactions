@@ -57,6 +57,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           path: ./dist
+          retention-days: 1
 
   deploy:
     runs-on: ubuntu-latest
@@ -75,4 +76,5 @@ jobs:
       - name: Start application
         run: |
           ls -l
+          ls -l dist
           npm run start
