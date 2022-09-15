@@ -22,7 +22,6 @@ jobs:
       - uses: actions/upload-artifact@master
         with:
           path: ./dist
-          name: pipeline
 
       # Runs a single command using the runners shell
       - name: Configure NodeJs
@@ -56,7 +55,6 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           path: ./dist
-          name: pipeline
           retention-days: 1
 
   deploy_to_dev:
@@ -74,7 +72,6 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           path: ./dist
-          name: pipeline
 
       - name: Start application
         run: |
@@ -97,7 +94,6 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           path: ./dist
-          name: pipeline
 
       - name: Start application
         run: |
@@ -120,7 +116,6 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           path: ./dist
-          name: pipeline
 
       - name: Start application
         run: |
@@ -146,5 +141,3 @@ jobs:
     if: ${{ always() && contains(needs.*.result, 'success') }}
     steps:
       - uses: geekyeggo/delete-artifact@v1
-        with:
-          name: pipeline
