@@ -6,7 +6,38 @@ on:
     branches:
       - main
       - development
+
+env:
+  PROJECT_ID: project1
+  GKE_CLUSTER: production # TODO: update with the cluster name
+  GKE_ZONE: us-east1-d # TODO: update with the cluster zone
+  DEPLOYMENT_NAME: app-angular-ssr # TODO: update with the deployment name
+  IMAGE: redesign-angular-ssr
+  CLUSTER_ENV: production
+
 jobs:
+
+  generate_labels:
+    name: Gerando labels
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Criando timestamp
+        id: timestamp
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d_%H_%M_%S')"
+
+      - name: Gerando nome da imagem
+        id: image_name
+        run: echo "::set-output name=image::${{ env.IMAGE }}:${{ steps.timestamp.outputs.date }}"
+
+      - name: Gerando url do container
+        id: gcr_container
+        run: echo "::set-output name=url::gcr.io/${{ env.PROJECT_ID }}/${{ steps.image_name.outputs.image }}"
+      
+      - name: Setando ambiente
+        id: current_environment
+        run: echo "::set-output name=env::gcr.io/${{ env.PROJECT_ID }}/${{ steps.image_name.outputs.image }}"
+
   test:
     runs-on: ubuntu-latest
     name: Initial configuration and testing
@@ -133,6 +164,7 @@ jobs:
       - name: Notify Slack
         run: |
           echo "Deployed to Dev"
+          echo "Teste aqui ${{ jobs.generate_labels.steps.timestamp.outputs.date }}"
 
   delete_artifacts:
     runs-on: ubuntu-latest
