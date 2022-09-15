@@ -103,7 +103,7 @@ jobs:
           npm run start
 
   notify-slack:
-    if: contains(needs.deploy_to_dev.result, 'success') || contains(needs.deploy_to_prod.result, 'success')
+    if: ${{contains(needs.deploy_to_dev.result, 'success') || contains(needs.deploy_to_prod.result, 'success')}}
     runs-on: ubuntu-latest
     name: Notify Slack
     needs: [deploy_to_dev, deploy_to_prod]
