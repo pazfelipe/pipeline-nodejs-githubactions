@@ -3,10 +3,6 @@ name: Testing Actions Environment
 on:
   workflow_dispatch:
 
-  push:
-    branches:
-      - development
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -20,6 +16,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+      - uses: actions/upload-artifact@master
+        with:
+          name: my-artifact
+          path: ./dist
 
       # Runs a single command using the runners shell
       - name: Configure NodeJs
@@ -46,14 +46,19 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Build
-        uses: ./.github/workflows/test
         run: |
-          ls
           npm run build
+          ls -l
+      
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ./dist
+          retention-days: 1
 
-  deploy:
+  deploy-to-dev:
     runs-on: ubuntu-latest
-    name: Deploy to Firebase
+    name: Deploy application to Dev
+    environment: dev
 
     needs: build
 
@@ -61,9 +66,33 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          path: ./dist
 
-      - name: Build
-        uses: ./.github/workflows/build
+      - name: Start application
         run: |
-          ls
+          mv dist/artifact/* dist
+          rm -rf dist/artifact
+          npm run start
+  
+  deploy-to-prod:
+    runs-on: ubuntu-latest
+    name: Deploy application to Prod
+    environment: prod
+
+    needs: build
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          path: ./dist
+
+      - name: Start application
+        run: |
+          mv dist/artifact/* dist
+          rm -rf dist/artifact
           npm run start
