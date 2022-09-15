@@ -44,7 +44,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      - uses: ./actions/test
+      - uses: ./github/actions/test/
 
       - name: Build
         run: |
@@ -61,7 +61,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      - uses: ./actions/build
+      - uses: ./github/actions/build/
 
       - name: Build
         run: |
