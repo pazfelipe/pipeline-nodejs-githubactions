@@ -20,6 +20,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+      - uses: actions/upload-artifact@master
+        with:
+          name: my-artifact
+          path: .
 
       # Runs a single command using the runners shell
       - name: Configure NodeJs
@@ -44,7 +48,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      - uses: ./.github/workflows/test
+      - uses: actions/upload-artifact@master
+        with:
+          name: my-artifact
+          path: .
 
       - name: Build
         run: |
@@ -61,9 +68,12 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      - uses: ./.github/workflows/build
+      - uses: actions/upload-artifact@master
+        with:
+          name: my-artifact
+          path: .
 
-      - name: Build
+      - name: Start application
         run: |
           ls
           npm run start
